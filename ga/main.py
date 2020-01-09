@@ -9,6 +9,7 @@ import datetime
 
 from ga.population import Population
 from ga.select import select
+from ga.solution_writer import init_writer, write
 
 
 def main(dataset):
@@ -19,7 +20,7 @@ def main(dataset):
 
     no_generation = 0
     log = open(LOG_FILE, 'a')
-    save_file = open(SAVE_FILE, 'a')
+    init_writer()
     while no_generation < MAX_NO_GENERATION:
         print('Generation: ', no_generation)
 
@@ -49,7 +50,7 @@ def main(dataset):
 
         if no_generation % INTERMEDIAR_SAVE == 0:
             fitness = np.array(get_fitness(generation.population_as_nets))
-            save_file.write(str(np.max(fitness)) +f'|{generation.population_as_array[np.argsort(fitness)[-1]]}|{datetime.datetime.now()}' + '\n')
+            write(fitness, generation)
 
 
 main(get_dataset())

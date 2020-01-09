@@ -1,1 +1,1 @@
-[["tub", "asia"], ["lung", "smoke"], ["bronc", "smoke"], ["either", "lung"], ["either", "tub"], ["xray", "either"], ["dysp", "bronc"], ["dysp", "either"]]
+[["asia", "tub"], ["smoke", "lung"], ["smoke", "bronc"], ["lung", "either"], ["tub", "either"], ["either", "xray"], ["bronc", "dysp"], ["either", "dysp"]]

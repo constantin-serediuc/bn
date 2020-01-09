@@ -5,6 +5,7 @@ import numpy as np
 class Population(object):
     shape = ()
     index_to_feature = {}
+    len_features = 0
 
     @staticmethod
     def init_state(size, features):
@@ -13,6 +14,7 @@ class Population(object):
             mapper.get_array_representation_len(len(features))
         )
         Population.index_to_feature = {i: feature for (i, feature) in list(zip(range(len(features)), features))}
+        len_features = len(features)
 
     def __init__(self, as_array=[], as_nets=[]):
         self.population_as_array = as_array

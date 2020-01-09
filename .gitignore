@@ -3,3 +3,4 @@
 __pycache__/
 *.py[cod]
 ASIA10k.csv
+log.txt

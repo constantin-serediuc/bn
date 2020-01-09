@@ -2,7 +2,7 @@ import matplotlib.pyplot as plt
 from matplotlib.animation import FuncAnimation
 
 def print_r(i):
-    with open('/Users/constantin/Documents/bn/ga/log.txt', 'r') as reader:
+    with open('../ga/log.txt', 'r') as reader:
         r = reader.readlines()
         r_processed = []
         for i in r:

@@ -9,3 +9,5 @@ print(G.edges) # in
 nx.draw(G, with_labels=True)
 plt.draw()
 plt.show()
+
+parint,copil
