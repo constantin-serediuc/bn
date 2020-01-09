@@ -1,0 +1,7 @@
+masuram perechi: parinte-copil (muchii practic)
+TP = perecha apare in ambele
+FP = perechea apare in prediction dar nu e in original
+TN = perechi care nu exista in niciun graf
+FN = perecehea apare in original dar nu e in predicted
+
+

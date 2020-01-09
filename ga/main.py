@@ -4,7 +4,8 @@ from ga.parameters import *
 from datasets.asia_test import get_dataset
 from ga.fitness import get_fitness
 import numpy as np
-import random
+import copy
+import datetime
 
 from ga.population import Population
 from ga.select import select
@@ -17,6 +18,8 @@ def main(dataset):
     print('Population shape:', generation.shape)
 
     no_generation = 0
+    log = open(LOG_FILE, 'a')
+    save_file = open(SAVE_FILE, 'a')
     while no_generation < MAX_NO_GENERATION:
         print('Generation: ', no_generation)
 
@@ -27,6 +30,10 @@ def main(dataset):
             generation.population_as_nets[indexes_of_best_fitnesses]
         )
 
+        log.write(str(np.max(fitness)) + '\n')
+        log.flush()
+        print(str(np.max(fitness)) + '\n')
+
         no_pairs = int((POPULATION_SIZE - ELITIST) / 2)
         for _ in range(no_pairs):
             index_p1, index_p2 = select(fitness)
@@ -34,8 +41,15 @@ def main(dataset):
             new_generation.add_individs(offsprings)
 
         for i in range(POPULATION_SIZE):
-            new_generation.add_individs([ mutate(generation.get(i))])
-            r = 0
+            new_generation.add_individs([mutate(generation.get(i))])
+
+        generation = copy.deepcopy(new_generation)
+
+        no_generation += 1
+
+        if no_generation % INTERMEDIAR_SAVE == 0:
+            fitness = np.array(get_fitness(generation.population_as_nets))
+            save_file.write(str(np.max(fitness)) +f'|{generation.population_as_array[np.argsort(fitness)[-1]]}|{datetime.datetime.now()}' + '\n')
 
 
 main(get_dataset())
