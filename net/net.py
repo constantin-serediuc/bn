@@ -106,4 +106,4 @@ class Net(object):
         return net
 
     def get_score(self):
-        return -1 * sum(self.score_per_family.values()) # am renuntat la * N pentru ca nu face vreo diferenta la compararea de scoruri
+        return sum(self.score_per_family.values())

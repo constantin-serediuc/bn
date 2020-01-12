@@ -8,12 +8,12 @@ class Population(object):
     len_features = 0
 
     @staticmethod
-    def init_state(size, features):
+    def init_state(size, features, node_ordering):
         Population.shape = (
             size,
             mapper.get_array_representation_len(len(features))
         )
-        Population.index_to_feature = {i: feature for (i, feature) in list(zip(range(len(features)), features))}
+        Population.index_to_feature = node_ordering
         len_features = len(features)
 
     def __init__(self, as_array=[], as_nets=[]):

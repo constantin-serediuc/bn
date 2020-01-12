@@ -1,5 +1,5 @@
 import pandas
-from datasets.asia_test import get_dataset
+from datasets.datasets import get_dataset
 from net.net import Net
 import numpy as np
 
@@ -28,4 +28,4 @@ def main():
     net.plot()
 
 
-main()
+# main()

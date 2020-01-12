@@ -2,6 +2,9 @@ import pandas as pd
 import numpy as np
 import math
 
+from ga.parameters import DATA
+
+
 def entropy(node, parents, data):
     df = data[[node] + parents]
     n = data.shape[0]
@@ -10,7 +13,7 @@ def entropy(node, parents, data):
         count_by_family = df.groupby([node]).size().reset_index(name='count')
         p_joint = np.divide(count_by_family['count'].to_numpy(), n)
 
-        return -1 * round(np.sum(np.multiply(p_joint, np.log2(p_joint))),4)
+        return round(n*np.sum(np.multiply(p_joint, np.log2(p_joint))) - math.log2(n)/2,4)
 
     count_by_family = df.groupby([node] + parents).size().reset_index(name='count_by_family')
     count_by_parents = df.groupby(parents).size().reset_index(name='count_by_parents')
@@ -22,8 +25,8 @@ def entropy(node, parents, data):
     p_joint = np.divide(joint_count, n)
     log_p_joint = np.log2(np.divide(parents_count, joint_count))
 
-    dimension = parents_count.shape[0]*max(data[node].nunique()-1,1) * math.log(n,2) /2
-    return round(np.sum(np.multiply(p_joint, log_p_joint))-dimension, 4)
+    dimension = count_by_parents.shape[0]*max(data[node].nunique()-1,1) * math.log2(n) /2
+    return round(-n*np.sum(np.multiply(p_joint, log_p_joint))-dimension, 4)
 
 
 # l = [
@@ -35,4 +38,4 @@ def entropy(node, parents, data):
 # ]
 #
 # df = pd.DataFrame(l, columns=['A', 'B', 'C', 'D'])
-# print(entropy('B', [], df))
+# print(entropy('dysp', ['smoke'], DATA))

@@ -4,7 +4,7 @@ import numpy as np
 import math
 
 
-def ij(k, n):
+def ij(k, n):#upper triangular matrix
     i = n - 2 - math.floor(math.sqrt(-8 * k + 4 * n * (n - 1) - 7) / 2.0 - 0.5)
     j = k + i + 1 - n * (n - 1) / 2 + (n - i) * ((n - i) - 1) / 2
     return (int(i), int(j))
@@ -40,7 +40,7 @@ def pass_family_scores_between(new, old_nets):
         for net in old_nets:
             if sorted(net.get_families()[node]) == sorted_parents:
                 new.score_per_family[node] = net.score_per_family[node]
-                continue
+                break
 
     return new
 # as_nets(np.array([[1, 1, 0, 0, 0, 1],[1, 1, 0, 0, 0, 1]]), 4)

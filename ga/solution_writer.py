@@ -17,5 +17,6 @@ def write(fitness, generation):
     as_array = generation.population_as_array[argmax]
     as_edges = list(generation.population_as_nets[argmax].graph.edges)
     save_file.write(
-        f'{str(np.max(fitness))}|{as_array}|{json.dumps(as_edges)}|{datetime.datetime.now()}\n'
+        f'{str(np.max(fitness))}|{json.dumps(as_array.tolist())}|{json.dumps(as_edges)}|{datetime.datetime.now()}\n'
     )
+    save_file.flush()
