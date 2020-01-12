@@ -17,7 +17,7 @@ def one_point_crossover(individ1, individ2):
     offspring1_net = pass_family_scores_between(offspring1_net, [individ1['as_net'], individ2['as_net']])
     offspring2_net = pass_family_scores_between(offspring2_net, [individ1['as_net'], individ2['as_net']])
 
-    return [{'as_array': offspring1_array, 'as_net': offspring1_net}, \
+    return [{'as_array': offspring1_array, 'as_net': offspring1_net},
             {'as_array': offspring2_array, 'as_net': offspring2_net}]
 
 
