@@ -1,7 +1,6 @@
 import json
 
 from ga.mapper import as_net
-from ga.node_ordering import order
 from ga.parameters import DATA, POPULATION_SIZE
 from ga.population import Population
 import numpy as np

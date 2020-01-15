@@ -4,6 +4,7 @@ from score import entropy
 import copy
 import random
 
+
 class Net(object):
     def __init__(self):
         self.graph = nx.DiGraph()
@@ -24,7 +25,11 @@ class Net(object):
         plt.draw()
         plt.show()
 
-    def initialize_random_structure(self, data): # TODO: true random
+    def init_from_columns(self, columns):
+        self.graph.add_nodes_from(columns)
+        self.n = len(columns)
+
+    def initialize_random_structure(self, data):  # TODO: true random
         self.graph.add_edge('asia', 'lung')
         self.graph.add_edge('smoke', 'tub')
         self.graph.add_edge('smoke', 'bronc')
@@ -107,3 +112,6 @@ class Net(object):
 
     def get_score(self):
         return sum(self.score_per_family.values())
+
+    def has_edge(self,source, target):
+        return self.graph.has_edge(source,target)

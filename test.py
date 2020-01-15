@@ -1,13 +1,7 @@
-
 import networkx as nx
-import matplotlib.pyplot as plt
-G = nx.DiGraph()   # or DiGraph, MultiGraph, MultiDiGraph, etc
-G.add_edge(1,2)
-G.add_edge(1,3)
-print(G.edges) # in
+import numpy as np
 
-nx.draw(G, with_labels=True)
-plt.draw()
-plt.show()
-
-parint,copil
+G = nx.DiGraph()
+G.add_edges_from([('A', 'B'), ('B', 'C')])
+print(nx.to_numpy_array(G))
+print(np.count_nonzero(nx.to_numpy_array(G)))
