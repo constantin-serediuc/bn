@@ -3,4 +3,5 @@ matplotlib
 pandas
 networkx
 gym
+tensorflow==1.8.0
 stable-baselines
