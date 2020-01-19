@@ -27,7 +27,6 @@ class Net(object):
 
     def init_from_columns(self, columns):
         self.graph.add_nodes_from(columns)
-        self.n = len(columns)
 
     def initialize_random_structure(self, data):  # TODO: true random
         self.graph.add_edge('asia', 'lung')
@@ -49,9 +48,15 @@ class Net(object):
     def compute_score_per_family(self, data):
         self.n = data.shape[0]
         for node, parents in self.get_families().items():
-            if node in self.score_per_family.keys():
+            if self.key(node,parents) in self.score_per_family.keys():
                 continue
-            self.score_per_family[node] = entropy(node, parents, data)
+            for k in list(self.score_per_family.keys()):
+                if k.startswith(f'{node}'):
+                    self.score_per_family.pop(k)
+            self.score_per_family[self.key(node,parents)] = entropy(node, parents, data)
+
+    def key(self, n, parents):
+        return f'{n}{sorted(parents)}'
 
     def mutate_through_deletion(self, data):
         if len(list(self.graph.edges)) == 0:
@@ -113,5 +118,9 @@ class Net(object):
     def get_score(self):
         return sum(self.score_per_family.values())
 
-    def has_edge(self,source, target):
-        return self.graph.has_edge(source,target)
+    def has_edge(self, source, target):
+        return self.graph.has_edge(source, target)
+
+    def compute_and_get_score(self, data):
+        self.compute_score_per_family(data)
+        return self.get_score()

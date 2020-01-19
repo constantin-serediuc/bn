@@ -25,7 +25,7 @@ def main():
     print(confusion_matrix)
 
 
-# main()
+main()
 
 def plot_net():
     node_ordering = node_ordering = {0: 'asia', 1: 'tub', 2: 'smoke', 3: 'bronc', 4: 'lung', 5: 'either', 6: 'dysp',
