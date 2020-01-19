@@ -127,7 +127,7 @@ class NetEnv(gym.Env):
         return self.current_state(), reward, self.is_finished(), {}
 
     def render(self, **kwargs):
-        print(self.net.graph.edges)
+        print(json.dumps(self.net.graph.edges))
 
     def close(self):
         pass
