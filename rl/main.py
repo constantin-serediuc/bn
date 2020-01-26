@@ -1,6 +1,5 @@
 import os
 import sys
-
 sys.path.insert(0,
                 os.path.abspath(__file__).rsplit(os.sep, 2)[0])
 from stable_baselines.common.policies import MlpPolicy
@@ -45,21 +44,21 @@ def callback(_locals, _globals):
 env = NetEnv(DATA)
 
 
-# env = Monitor(env, log_dir, allow_early_resets=True)
-# env = DummyVecEnv([lambda: env])
-# model = PPO2(MlpPolicy, env,
-#              verbose=0)  # add tensorboard_log="./test/" and run tensorboard --logdir /Users/constantin/Documents/bn/rl/test/PPO2_1
-# model.learn(total_timesteps=10 ** 5, callback=callback)
+env = Monitor(env, log_dir, allow_early_resets=True)
+env = DummyVecEnv([lambda: env])
+model = PPO2(MlpPolicy, env,
+             verbose=0)  # add tensorboard_log="./test/" and run tensorboard --logdir /Users/constantin/Documents/bn/rl/test/PPO2_1
+model.learn(total_timesteps=10 ** 5, callback=callback)
 
-def evaluate(model, num_steps=1000):
-    obs = env.reset()
-    for i in range(num_steps):
-        # _states are only useful when using LSTM policies
-        action, _states = model.predict(obs)
-
-        obs, reward, done, info = env.step(action)
-        env.render()
-
-
-model = PPO2.load("/home/constantin/Desktop/projects/disertation/rl_logs/best_model299.pkl")
-evaluate(model, 30)
+# def evaluate(model, num_steps=1000):
+#     obs = env.reset()
+#     for i in range(num_steps):
+#         # _states are only useful when using LSTM policies
+#         action, _states = model.predict(obs)
+#
+#         obs, reward, done, info = env.step(action)
+#         env.render()
+#
+#
+# model = PPO2.load("/home/constantin/Desktop/projects/disertation/rl_logs_1_1-20200120T201830Z-001/rl_logs_1_1/1_best_model399.pkl")
+# evaluate(model, 30)

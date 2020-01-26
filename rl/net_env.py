@@ -13,7 +13,7 @@ import networkx as nx
 from rl.parameters import MAX_STEPS
 
 REMOVE_WITH_GREATER_LLOG = 1
-REMOVE_BUT_SMALLER_LLOG =0
+REMOVE_BUT_SMALLER_LLOG = 0
 REMOVE_BUT_EDGE_NOT_EXISTS = 0
 DRAW_WITH_GREATER_LLOG = 1
 DRAW_BUT_SMALLER_LLOG = 0
@@ -33,7 +33,7 @@ class NetEnv(gym.Env):
         self.net.init_from_columns(data.columns)
 
         self.no_nodes = len(data.columns)
-        self.n_actions = 2 * self.no_nodes
+        self.n_actions = 3 * self.no_nodes
         self.matrix_count = (self.no_nodes ** 2) - 1
         self.action_space = spaces.Discrete(self.n_actions)
         self.observation_space = spaces.Box(low=0, high=self.no_nodes,
@@ -42,6 +42,7 @@ class NetEnv(gym.Env):
         self.current_step = 0
         self.index_to_feature = {i: feature for (i, feature) in list(zip(range(len(data.columns)), data.columns))}
         self.types_of_rewards = self.get_default_couter_for_types_of_reward()
+        self.max_llog = -np.inf
 
     def reset(self):
         self.agent_pos = 0
@@ -50,7 +51,7 @@ class NetEnv(gym.Env):
         self.net.init_from_columns(self.data.columns)
 
         self.current_step = 0
-        with open('types_of_rewards.json', 'a') as f:
+        with open('types_of_rewards_from_colab.json', 'a') as f:
             f.write(json.dumps(self.get_types_of_rewards()) + '\n')
             f.flush()
         self.types_of_rewards = self.get_default_couter_for_types_of_reward()
@@ -67,9 +68,11 @@ class NetEnv(gym.Env):
         remove_edge = False
         if action >= 2 * self.no_nodes:
             remove_edge = True
+            draw_edge = False
             action -= 2 * self.no_nodes
         elif action >= self.no_nodes:
             draw_edge = False
+            remove_edge = False
             action -= self.no_nodes
 
         target_node = (action + self.agent_pos) % self.no_nodes
@@ -104,16 +107,26 @@ class NetEnv(gym.Env):
             else:
                 reward = DRAW_BUT_SMALLER_LLOG
                 self.types_of_rewards['draw_but_smaller_llog'] += 1
+            if current_llog > self.max_llog:
+                self.max_llog = current_llog
+                self.write_solution()
             return self.current_state(), reward, self.is_finished(), {}
 
-        if not self.edge_exists(self.agent_pos, target_node):
+        if not self.edge_exists(self.agent_pos, target_node) and not self.edge_exists(target_node, self.agent_pos):
             self.types_of_rewards['remove_but_edge_not_exists'] += 1
             return self.current_state(), REMOVE_BUT_EDGE_NOT_EXISTS, self.is_finished(), {}
 
-        self.net.graph.remove_edge(
-            self.index_to_feature[self.agent_pos],
-            self.index_to_feature[target_node]
-        )
+        if self.edge_exists(self.agent_pos, target_node):
+            self.net.graph.remove_edge(
+                self.index_to_feature[self.agent_pos],
+                self.index_to_feature[target_node]
+            )
+        else:
+            self.net.graph.remove_edge(
+                self.index_to_feature[target_node],
+                self.index_to_feature[self.agent_pos]
+            )
+
         current_llog = self.net.compute_and_get_score(self.data)
         if current_llog > previous_llog:
             reward = REMOVE_WITH_GREATER_LLOG
@@ -123,11 +136,13 @@ class NetEnv(gym.Env):
             self.types_of_rewards['remove_but_smaller_llog'] += 1
 
         self.agent_pos = target_node
-
+        if current_llog > self.max_llog:
+            self.max_llog = current_llog
+            self.write_solution()
         return self.current_state(), reward, self.is_finished(), {}
 
     def render(self, **kwargs):
-        print(json.dumps(self.net.graph.edges))
+        print(json.dumps(list(self.net.graph.edges)))
 
     def close(self):
         pass
@@ -155,3 +170,8 @@ class NetEnv(gym.Env):
                 'remove_but_edge_not_exists': 0, 'remove_with_greater_llog': 0,
                 'remove_but_smaller_llog': 0
                 }
+
+    def write_solution(self):
+        with open('max_llogs.json', 'a') as f:
+            f.write(json.dumps(list(self.net.graph.edges)) + '\n')
+            f.flush()

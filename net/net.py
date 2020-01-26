@@ -3,6 +3,7 @@ import matplotlib.pyplot as plt
 from score import entropy
 import copy
 import random
+import hashlib
 
 
 class Net(object):
@@ -56,7 +57,8 @@ class Net(object):
             self.score_per_family[self.key(node,parents)] = entropy(node, parents, data)
 
     def key(self, n, parents):
-        return f'{n}{sorted(parents)}'
+        parent_hash = hashlib.sha1(''.join(sorted(parents)).encode('UTF-8')).hexdigest()
+        return f'{n}{parent_hash}'
 
     def mutate_through_deletion(self, data):
         if len(list(self.graph.edges)) == 0:
