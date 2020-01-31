@@ -7,7 +7,8 @@ from stable_baselines.common.vec_env import DummyVecEnv
 from stable_baselines import PPO2
 
 from ga.parameters import DATA
-from rl.net_env import NetEnv
+from rl.env_edge_addition import NetEnv
+# from rl.env_traverse_graph import NetEnv
 import os
 
 import numpy as np
@@ -15,7 +16,7 @@ from stable_baselines.bench import Monitor
 from stable_baselines.results_plotter import load_results, ts2xy
 
 best_mean_reward, n_steps = -np.inf, 0
-log_dir = "./rl_logs/"
+log_dir = "./rl_logs/monitors"
 os.makedirs(log_dir, exist_ok=True)
 
 

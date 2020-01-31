@@ -60,7 +60,7 @@ class NetEnv(gym.Env):
     def current_state(self):
         return np.append(nx.to_numpy_array(self.net.graph).flatten(), self.agent_pos)
 
-    def step(self, action: int):
+    def step(self, action: int): # add verification for cycles
         previous_llog = self.net.compute_and_get_score(self.data)
         self.current_step += 1
 

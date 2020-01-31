@@ -126,3 +126,6 @@ class Net(object):
     def compute_and_get_score(self, data):
         self.compute_score_per_family(data)
         return self.get_score()
+
+    def has_cycles(self):
+        return len(list(nx.simple_cycles(self.graph))) > 0

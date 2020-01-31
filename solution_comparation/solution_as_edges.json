@@ -1,3 +1,4 @@
 {"original":[["asia", "tub"], ["smoke", "lung"], ["smoke", "bronc"], ["lung", "either"], ["tub", "either"], ["either", "xray"], ["bronc", "dysp"], ["either", "dysp"]],
-  "predicted": [["asia", "dysp"], ["bronc", "lung"], ["either", "bronc"], ["xray", "either"], ["dysp", "xray"]]
+  "predicted": [["asia", "xray"], ["asia", "lung"], ["tub", "bronc"], ["tub", "either"], ["smoke", "bronc"], ["smoke", "either"], ["lung", "bronc"], ["lung", "tub"], ["lung", "either"], ["lung", "dysp"], ["bronc", "dysp"], ["bronc", "xray"], ["bronc", "asia"], ["either", "xray"], ["either", "asia"], ["xray", "smoke"], ["xray", "lung"], ["dysp", "smoke"], ["dysp", "tub"]]
+
 }
