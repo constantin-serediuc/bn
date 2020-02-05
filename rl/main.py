@@ -4,7 +4,7 @@ sys.path.insert(0,
                 os.path.abspath(__file__).rsplit(os.sep, 2)[0])
 from stable_baselines.common.policies import MlpPolicy
 from stable_baselines.common.vec_env import DummyVecEnv
-from stable_baselines import PPO2
+from stable_baselines import PPO2, A2C
 
 from ga.parameters import DATA
 from rl.env_edge_addition import NetEnv
@@ -17,6 +17,7 @@ from stable_baselines.results_plotter import load_results, ts2xy
 
 best_mean_reward, n_steps = -np.inf, 0
 log_dir = "./rl_logs/monitors"
+model_file =log_dir + f'/best_model.pkl'
 os.makedirs(log_dir, exist_ok=True)
 
 
@@ -29,14 +30,14 @@ def callback(_locals, _globals):
             mean_reward = np.mean(y[-100:])
             print(x[-1], 'timesteps')
             print(
-                "Best mean reward: {:.2f} - Last mean reward per episode: {:.2f}".format(best_mean_reward, mean_reward))
+                "Last Best mean reward: {:.2f} - New mean reward per episode: {:.2f}".format(best_mean_reward, mean_reward))
 
             # New best model, you could save the agent here
             if mean_reward > best_mean_reward:
                 best_mean_reward = mean_reward
                 # Example for saving best model
                 print("Saving new best model")
-                _locals['self'].save(log_dir + f'best_model{n_steps}.pkl')
+                _locals['self'].save(model_file)
     n_steps += 1
     # Returning False will stop training early
     return True
@@ -47,7 +48,10 @@ env = NetEnv(DATA)
 
 env = Monitor(env, log_dir, allow_early_resets=True)
 env = DummyVecEnv([lambda: env])
-model = PPO2(MlpPolicy, env,
+if os.path.isfile(model_file):
+    model = A2C.load(model_file, env=env)
+else:
+    model = A2C(MlpPolicy, env,
              verbose=0)  # add tensorboard_log="./test/" and run tensorboard --logdir /Users/constantin/Documents/bn/rl/test/PPO2_1
 model.learn(total_timesteps=10 ** 5, callback=callback)
 
