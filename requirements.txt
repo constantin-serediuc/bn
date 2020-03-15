@@ -5,3 +5,5 @@ networkx==2.4
 gym==0.15.4
 tensorflow==1.8.0
 stable-baselines==2.9.0
+sklearn
+seaborn

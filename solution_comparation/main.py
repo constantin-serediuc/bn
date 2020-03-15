@@ -4,6 +4,9 @@ from ga.mapper import as_net
 from ga.parameters import DATA, POPULATION_SIZE
 from ga.population import Population
 import numpy as np
+import matplotlib.pyplot as plt
+import math
+from solution_comparation.cm_plot import make_confusion_matrix
 
 
 def main():
@@ -14,15 +17,36 @@ def main():
     original = set([f'{i[0]}{i[1]}' for i in solutions['original']])
     predicted = set([f'{i[0]}{i[1]}' for i in solutions['predicted']])
 
-    confusion_matrix = {
+    cm = {
         'tn': 0,
         'tp': len(original.intersection(predicted)),
         'fp': len(predicted - original),
         'fn': len(original - predicted)
     }
 
-    confusion_matrix['tn'] = n * (n - 1) / 2 - confusion_matrix['tp'] - confusion_matrix['fp'] - confusion_matrix['fn']
-    print(confusion_matrix)
+    cm['tn'] = n * (n - 1) / 2 - cm['tp'] - cm['fp'] - cm['fn']
+
+    labels = ['True Neg', 'FalsePos', 'FalseNeg', 'TruePos']
+    categories = ['Zero', 'One']
+    make_confusion_matrix(np.array([[cm['tn'],cm['fp']],[cm['fn'],cm['tp']]]),
+                          group_names=labels,
+                          categories=categories,
+                          figsize=(4,4),
+                          sum_stats=False,
+                          )
+    print(cm)
+    print_metrics(cm)
+    # plt.show()
+
+
+def print_metrics(cm):
+    metrics = {}
+    metrics['Accuracy'] = (cm['tp'] + cm['tn']) / (sum(cm.values()))
+    metrics['Precision'] = (cm['tp']) / (cm['tp'] + cm['fp'])
+    metrics['Recall'] = (cm['tp']) / (cm['tp'] + cm['fn'])
+    metrics['Matthews Correlation Coefficient'] = (cm['tp']*cm['tn'] - cm['fp']*cm['fn'])/math.sqrt((cm['tp']+cm['fp'])*(cm['tp']+cm['fn'])*(cm['tn']+cm['fp'])*(cm['tn']+cm['fn']))
+    for name,val in metrics.items():
+        print(f'{name}: {round(val,4)}')
 
 
 main()
