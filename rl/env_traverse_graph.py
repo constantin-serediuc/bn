@@ -30,7 +30,7 @@ class NetEnv(gym.Env):
         self.agent_pos = 0  # index in matrix . i = pos/self.n j = pos%self.n
 
         self.net = Net()
-        self.net.init_from_columns(data.columns)
+        self.net.init_graph_nodes(data)
 
         self.no_nodes = len(data.columns)
         self.n_actions = 3 * self.no_nodes
@@ -48,7 +48,7 @@ class NetEnv(gym.Env):
         self.agent_pos = 0
 
         self.net = Net()
-        self.net.init_from_columns(self.data.columns)
+        self.net.init_graph_nodes(self.data)
 
         self.current_step = 0
         with open('types_of_rewards_from_colab.json', 'a') as f:

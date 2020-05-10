@@ -2,21 +2,24 @@ import os
 import sys
 sys.path.insert(0,
                 os.path.abspath(__file__).rsplit(os.sep, 2)[0])
-from stable_baselines.common.policies import MlpPolicy
+from stable_baselines.common.policies import MlpPolicy, MlpLnLstmPolicy
 from stable_baselines.common.vec_env import DummyVecEnv
-from stable_baselines import PPO2, A2C
+from stable_baselines import PPO2, A2C, ACKTR
 
 from ga.parameters import DATA
 from rl.env_edge_addition import NetEnv
 # from rl.env_traverse_graph import NetEnv
+# from rl.env_edge_add_remove import NetEnv
 import os
 
 import numpy as np
 from stable_baselines.bench import Monitor
 from stable_baselines.results_plotter import load_results, ts2xy
 
+env = NetEnv(DATA)
+base_test_file = env.FILE
 best_mean_reward, n_steps = -np.inf, 0
-log_dir = "./rl_logs/monitors"
+log_dir = f"./{env.FILE}/monitors"
 model_file =log_dir + f'/best_model.pkl'
 os.makedirs(log_dir, exist_ok=True)
 
@@ -42,16 +45,12 @@ def callback(_locals, _globals):
     # Returning False will stop training early
     return True
 
-
-env = NetEnv(DATA)
-
-
 env = Monitor(env, log_dir, allow_early_resets=True)
 env = DummyVecEnv([lambda: env])
 if os.path.isfile(model_file):
-    model = A2C.load(model_file, env=env)
+    model = ACKTR.load(model_file, env=env)
 else:
-    model = A2C(MlpPolicy, env,
+    model = ACKTR(MlpLnLstmPolicy, env, tensorboard_log=f"./test{base_test_file}/",
              verbose=0)  # add tensorboard_log="./test/" and run tensorboard --logdir /Users/constantin/Documents/bn/rl/test/PPO2_1
 model.learn(total_timesteps=10 ** 5, callback=callback)
 

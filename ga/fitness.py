@@ -1,10 +1,14 @@
+import time
+
 from net.net import Net
 
 from ga.parameters import DATA
 
 
 def bic_fitness_based(solution: Net):
+    # t = time.time()
     solution.compute_score_per_family(DATA)
+    # print('----',time.time()-t)
     return solution.get_score()
 
 

@@ -16,11 +16,11 @@ from rl.parameters import MAX_STEPS
 class Env(gym.Env):
     def __init__(self, data: pd.DataFrame):
         super(Env, self).__init__()
-
+        self.FILE = 'rl_logs_file'
         self.data = data
 
         self.net = Net()
-        self.net.init_from_columns(data.columns)
+        self.net.init_graph_nodes(data)
 
         self.no_nodes = len(data.columns)
 
@@ -40,10 +40,18 @@ class Env(gym.Env):
             self.index_to_feature[target_node]
         )
 
-    def write_solution(self):
-        with open('./rl_logs/solutions/max_llogs.json', 'a') as f:
+    def write_solution(self, llog):
+        with open(f'./{self.FILE}/solutions/max_llogs.json', 'a') as f,open(f'./{self.FILE}/solutions/max_bic.txt', 'a') as f_bic:
             f.write(json.dumps(list(self.net.graph.edges)) + '\n')
+            f_bic.write(str(llog) + '\n')
             f.flush()
+            f_bic.flush()
+
+    def write_bic(self,llog):
+        with open(f'./{self.FILE}/solutions/log_max_bic.txt', 'a') as f_bic:
+            f_bic.write(str(llog) + '\n')
+            f_bic.flush()
+
 
     def get_default_counter_for_reward_types(self):
         return {}

@@ -1,0 +1,31 @@
+{"original":[["asia", "tub"], ["smoke", "lung"], ["smoke", "bronc"], ["lung", "either"], ["tub", "either"], ["either", "xray"], ["bronc", "dysp"], ["either", "dysp"]],
+  "predicted":[["tub", "either"], ["lung", "either"], ["lung", "smoke"], ["either", "xray"], ["either", "dysp"], ["smoke", "bronc"], ["bronc", "dysp"]]
+
+  }
+
+// pentru alarm perfect
+{"original":[["LVFAILURE", "HISTORY"], ["LVEDVOLUME", "CVP"], ["LVEDVOLUME", "PCWP"], ["HYPOVOLEMIA", "LVEDVOLUME"], ["LVFAILURE", "LVEDVOLUME"], ["HYPOVOLEMIA", "STROKEVOLUME"], ["LVFAILURE", "STROKEVOLUME"], ["ERRLOWOUTPUT", "HRBP"], ["HR", "HRBP"], ["ERRCAUTER", "HREKG"], ["HR", "HREKG"], ["ERRCAUTER", "HRSAT"], ["HR", "HRSAT"], ["ANAPHYLAXIS", "TPR"], ["ARTCO2", "EXPCO2"], ["VENTLUNG", "EXPCO2"], ["INTUBATION", "MINVOL"], ["VENTLUNG", "MINVOL"], ["FIO2", "PVSAT"], ["VENTALV", "PVSAT"], ["PVSAT", "SAO2"], ["SHUNT", "SAO2"], ["PULMEMBOLUS", "PAP"], ["INTUBATION", "SHUNT"], ["PULMEMBOLUS", "SHUNT"], ["INTUBATION", "PRESS"], ["KINKEDTUBE", "PRESS"], ["VENTTUBE", "PRESS"], ["MINVOLSET", "VENTMACH"], ["DISCONNECT", "VENTTUBE"], ["VENTMACH", "VENTTUBE"], ["INTUBATION", "VENTLUNG"], ["KINKEDTUBE", "VENTLUNG"], ["VENTTUBE", "VENTLUNG"], ["INTUBATION", "VENTALV"], ["VENTLUNG", "VENTALV"], ["VENTALV", "ARTCO2"], ["ARTCO2", "CATECHOL"], ["INSUFFANESTH", "CATECHOL"], ["SAO2", "CATECHOL"], ["TPR", "CATECHOL"], ["CATECHOL", "HR"], ["HR", "CO"], ["STROKEVOLUME", "CO"], ["CO", "BP"], ["TPR", "BP"]],
+  "predicted":[["LVFAILURE", "HYPOVOLEMIA"], ["LVFAILURE", "LVEDVOLUME"], ["LVFAILURE", "ERRLOWOUTPUT"], ["LVFAILURE", "ERRCAUTER"], ["LVFAILURE", "ANAPHYLAXIS"], ["LVFAILURE", "STROKEVOLUME"], ["LVFAILURE", "HISTORY"], ["LVFAILURE", "CVP"], ["LVFAILURE", "MINVOL"], ["HYPOVOLEMIA", "LVEDVOLUME"], ["HYPOVOLEMIA", "STROKEVOLUME"], ["LVEDVOLUME", "CVP"], ["LVEDVOLUME", "PCWP"], ["ERRLOWOUTPUT", "INSUFFANESTH"], ["ERRLOWOUTPUT", "HISTORY"], ["ERRLOWOUTPUT", "HRBP"], ["ERRLOWOUTPUT", "HREKG"], ["HR", "CATECHOL"], ["HR", "FIO2"], ["HR", "CO"], ["HR", "HRBP"], ["HR", "HREKG"], ["HR", "HRSAT"], ["CATECHOL", "VENTALV"], ["CATECHOL", "TPR"], ["ERRCAUTER", "FIO2"], ["ERRCAUTER", "SHUNT"], ["ERRCAUTER", "STROKEVOLUME"], ["ERRCAUTER", "HREKG"], ["ERRCAUTER", "HRSAT"], ["ANAPHYLAXIS", "INTUBATION"], ["ANAPHYLAXIS", "VENTMACH"], ["ANAPHYLAXIS", "TPR"], ["ANAPHYLAXIS", "CVP"], ["VENTALV", "ARTCO2"], ["VENTALV", "VENTLUNG"], ["VENTALV", "INTUBATION"], ["VENTALV", "KINKEDTUBE"], ["VENTALV", "PVSAT"], ["ARTCO2", "SHUNT"], ["ARTCO2", "EXPCO2"], ["VENTLUNG", "INTUBATION"], ["VENTLUNG", "VENTTUBE"], ["VENTLUNG", "EXPCO2"], ["VENTLUNG", "MINVOL"], ["INTUBATION", "VENTTUBE"], ["INTUBATION", "SHUNT"], ["INTUBATION", "PULMEMBOLUS"], ["INTUBATION", "HISTORY"], ["INTUBATION", "MINVOL"], ["INTUBATION", "PRESS"], ["KINKEDTUBE", "PRESS"], ["VENTTUBE", "DISCONNECT"], ["VENTTUBE", "VENTMACH"], ["VENTTUBE", "PRESS"], ["FIO2", "PVSAT"], ["PVSAT", "SAO2"], ["SHUNT", "PULMEMBOLUS"], ["SHUNT", "SAO2"], ["PULMEMBOLUS", "PAP"], ["DISCONNECT", "VENTMACH"], ["DISCONNECT", "HRBP"], ["VENTMACH", "MINVOLSET"], ["VENTMACH", "PAP"], ["INSUFFANESTH", "TPR"], ["SAO2", "TPR"], ["TPR", "BP"], ["STROKEVOLUME", "CO"], ["CO", "BP"], ["HISTORY", "HRSAT"]]
+  }
+from datasets.datasets import get_dataset
+
+POPULATION_SIZE=20
+MAX_NO_GENERATION = 1400
+MAX_NO_GENERATION_SAME_SCORE = 70
+
+DATA = get_dataset()
+
+ELITIST = 2 # POPULATION_SIZE-ELITISM trebuie sa fie numar par pentru a fi mai usor la crossover si a scuti o verificare in plus
+CROSSOVER_RATE=0.8
+MUTATION_RATE=0.001
+
+LOG_FILE = "log.txt"
+SAVE_FILE = "save.txt"
+CHECKPOINT_FILE = "checkpoint_alarm_mi_median.txt"
+INTERMEDIAR_SAVE = 10
+
+
+
+
+
+

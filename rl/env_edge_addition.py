@@ -10,16 +10,16 @@ import networkx as nx
 from rl.env import Env
 from rl.parameters import MAX_STEPS
 
-CYCLES = -2
+CYCLES = -20
 GREATER_LLOG = 1
 LOWER_LLOG = -1
 EDGE_EXISTS = -1
-
 
 # cum se modifica reward ul cand is finished
 class NetEnv(Env):
     def __init__(self, data: pd.DataFrame):
         super().__init__(data)
+        self.FILE = 'rl_logs_add'
 
         self.has_cycles = False
         self.n = self.no_nodes - 1
@@ -33,11 +33,11 @@ class NetEnv(Env):
 
     def reset(self):
         self.net = Net()
-        self.net.init_from_columns(self.data.columns)
+        self.net.init_graph_nodes(self.data)
         self.current_step = 0
         self.has_cycles = False
 
-        with open('./rl_logs/reward_types/reward_types.json', 'a') as f:
+        with open(f'./{self.FILE}/reward_types/reward_types.json', 'a') as f:
             f.write(json.dumps(self.get_ordered_reward_types()) + '\n')
             f.flush()
 
@@ -65,6 +65,8 @@ class NetEnv(Env):
             return self.current_state(), CYCLES, self.is_finished(), {}
 
         current_llog = self.net.compute_and_get_score(self.data)
+        if self.current_step % 20 == 0:
+            self.write_bic(current_llog)
 
         if current_llog <= previous_llog:
             self.reward_types_counter['lower_llog'] += 1
@@ -72,7 +74,7 @@ class NetEnv(Env):
 
         if current_llog > self.max_llog:
             self.max_llog = current_llog
-            self.write_solution()
+            self.write_solution(current_llog)
         self.reward_types_counter['greater_llog'] += 1
 
         return self.current_state(), GREATER_LLOG, self.is_finished(), {}

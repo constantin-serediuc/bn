@@ -1,6 +1,8 @@
+import json
+
 from ga import mapper
 import numpy as np
-
+from ga.parameters import CHECKPOINT_FILE
 
 class Population(object):
     shape = ()
@@ -16,12 +18,12 @@ class Population(object):
         Population.index_to_feature = node_ordering
         len_features = len(features)
 
-    def __init__(self, as_array=[], as_nets=[]):
+    def __init__(self, as_array=None, as_nets=None):
         self.population_as_array = as_array
         self.population_as_nets = as_nets
 
     def random(self):
-        self.population_as_array = np.random.randint(2, size=Population.shape)
+        self.population_as_array = np.random.choice([0, 1], size=Population.shape, p=[1./10, 9./10])
         self.population_as_nets = mapper.as_nets(self.population_as_array)
 
     def get(self, i):
@@ -31,6 +33,11 @@ class Population(object):
         }
 
     def add_individs(self, individs):
+        if self.population_as_array is None:
+            self.population_as_array = [individ['as_array'] for individ in individs]
+            self.population_as_nets = [individ['as_net'] for individ in individs]
+            return
+
         self.population_as_array = np.append(
             self.population_as_array,
             [individ['as_array'] for individ in individs],
@@ -41,3 +48,8 @@ class Population(object):
             [individ['as_net'] for individ in individs],
             axis=0
         )
+
+    def load(self):
+        a = json.load(open(CHECKPOINT_FILE))
+        self.population_as_array = np.array(a)
+        self.population_as_nets = mapper.as_nets(self.population_as_array)

@@ -1,9 +1,12 @@
+import time
+
 import networkx as nx
 import matplotlib.pyplot as plt
-from score import entropy
+from score import bic_score_of_a_family
 import copy
 import random
 import hashlib
+import random
 
 
 class Net(object):
@@ -27,17 +30,21 @@ class Net(object):
         plt.show()
 
     def init_from_columns(self, columns):
-        self.graph.add_nodes_from(columns)
+        self.graph.add_edges_from(columns)
 
-    def initialize_random_structure(self, data):  # TODO: true random
-        self.graph.add_edge('asia', 'lung')
-        self.graph.add_edge('smoke', 'tub')
+    def init_graph_nodes(self, data):
+        self.graph.add_nodes_from(list(data.columns))
+        # self.good_asia_graph()
+
+    def good_asia_graph(self):
+        self.graph.add_edge('asia', 'tub')
         self.graph.add_edge('smoke', 'bronc')
+        self.graph.add_edge('smoke', 'lung')
         self.graph.add_edge('tub', 'either')
-        self.graph.add_edge('lung', 'bronc')
-        self.graph.add_edge('either', 'lung')
-        self.graph.add_edge('xray', 'either')
-        self.graph.add_edge('dysp', 'lung')
+        self.graph.add_edge('lung', 'either')
+        self.graph.add_edge('bronc', 'dysp')
+        self.graph.add_edge('either', 'dysp')
+        self.graph.add_edge('either', 'xray')
 
     def get_families(self):
         families = {}
@@ -49,12 +56,16 @@ class Net(object):
     def compute_score_per_family(self, data):
         self.n = data.shape[0]
         for node, parents in self.get_families().items():
-            if self.key(node,parents) in self.score_per_family.keys():
+            if self.key(node, parents) in self.score_per_family.keys():
                 continue
             for k in list(self.score_per_family.keys()):
                 if k.startswith(f'{node}'):
                     self.score_per_family.pop(k)
-            self.score_per_family[self.key(node,parents)] = entropy(node, parents, data)
+            # t = time.time()
+
+            self.score_per_family[self.key(node, parents)] = bic_score_of_a_family(node, parents, data)
+            # print('++++++', time.time()-t)
+
 
     def key(self, n, parents):
         parent_hash = hashlib.sha1(''.join(sorted(parents)).encode('UTF-8')).hexdigest()
@@ -73,7 +84,8 @@ class Net(object):
         net.set_n(self.n)
 
         scores = copy.deepcopy(self.score_per_family)
-        scores[chosen_edge[1]] = entropy(chosen_edge[1], list(net.graph.predecessors(chosen_edge[1])), data)
+        scores[chosen_edge[1]] = bic_score_of_a_family(chosen_edge[1], list(net.graph.predecessors(chosen_edge[1])),
+                                                       data)
         net.set_score_per_family(scores)
 
         return net
@@ -94,7 +106,7 @@ class Net(object):
 
         scores = copy.deepcopy(self.score_per_family)
         for node in chosen_edge:
-            scores[node] = entropy(node, list(net.graph.predecessors(node)), data)
+            scores[node] = bic_score_of_a_family(node, list(net.graph.predecessors(node)), data)
         net.set_score_per_family(scores)
 
         return net
@@ -112,7 +124,8 @@ class Net(object):
         net.set_n(self.n)
 
         scores = copy.deepcopy(self.score_per_family)
-        scores[chosen_edge[1]] = entropy(chosen_edge[1], list(net.graph.predecessors(chosen_edge[1])), data)
+        scores[chosen_edge[1]] = bic_score_of_a_family(chosen_edge[1], list(net.graph.predecessors(chosen_edge[1])),
+                                                       data)
         net.set_score_per_family(scores)
 
         return net

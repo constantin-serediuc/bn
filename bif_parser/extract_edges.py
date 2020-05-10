@@ -19,4 +19,4 @@ def extract(file):
     with open('edge.txt', 'w') as outfile:
         json.dump(edges, outfile)
 
-extract('../asia.bif')
+extract('../alarm.bif')

@@ -1,0 +1,25 @@
+rl_logs_add_remove mlp: -32 247.3692
+
+CYCLES = -10
+GREATER_LLOG = 1
+REMOVE_GREATER_LLOG = 2
+LOWER_LLOG = -1
+EDGE_EXISTS = -1
+EDGE_NOT_EXISTS = -1
+
+
+rl_logs_add_remove mlplnlstm :-32 216.3091
+
+CYCLES = -10
+GREATER_LLOG = 1
+REMOVE_GREATER_LLOG = 2
+LOWER_LLOG = -1
+EDGE_EXISTS = -1
+EDGE_NOT_EXISTS = -1
+
+rl_logs_add_mlplnlstm: -32 302.3055
+
+CYCLES = -10
+GREATER_LLOG = 1
+LOWER_LLOG = -1
+EDGE_EXISTS = -1
